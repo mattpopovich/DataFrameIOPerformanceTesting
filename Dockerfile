@@ -8,6 +8,9 @@ RUN apt-get update && apt-get upgrade -y
 # Python pandas for DataFrame handling
 RUN pip3 install --upgrade pandas
 
+# Apache Arrow Python binding
+RUN pip3 install --upgrade pyarrow
+
 # Set working directory
 WORKDIR /app
 
