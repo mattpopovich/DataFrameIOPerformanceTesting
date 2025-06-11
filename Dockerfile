@@ -11,6 +11,9 @@ RUN pip3 install --upgrade pandas
 # Apache Arrow Python binding
 RUN pip3 install --upgrade pyarrow
 
+# Pytables for .h5 files
+RUN pip3 install --upgrade tables
+
 # Set working directory
 WORKDIR /app
 

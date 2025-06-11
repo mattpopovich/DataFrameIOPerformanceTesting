@@ -42,12 +42,12 @@ for format, operation in formats.items():
     end_time_s = time.perf_counter()
     read_time_s = end_time_s - start_time_s
 
-    dataframe_memory_difference_B = df.memory_usage().sum() - df2.memory_usage().sum()
+    dataframe_memory_difference_B = df2.memory_usage().sum() - df.memory_usage().sum()
     total_io_s = write_time_s + read_time_s
     results.append(
         {
             "Format": format,
-            "DataFrame Memory Differences (B)": dataframe_memory_difference_B,
+            "DataFrame Memory Difference (B)": dataframe_memory_difference_B,
             "Write time to file (s)": write_time_s,
             "Read time from file (s)": read_time_s,
             "Total I/O (s)": total_io_s,

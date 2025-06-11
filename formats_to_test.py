@@ -31,9 +31,14 @@ formats = {
     },
     # TODO: lots more .csv tests
     # TODO: zip tests
-    # TODO: pickle, parquet, feather, hdf tests
+    # TODO: pickle, parquet, feather tests
+    "hdf": {
+        "write": lambda df, output_path: df.to_hdf(output_path, key="data", mode="w"),
+        "read": lambda path: pd.read_hdf(path),
+        "extension": "h5",
+    },
     "orc": {
-        "write": lambda df, path: df.to_orc(path),
+        "write": lambda df, output_path: df.to_orc(output_path),
         "read": lambda path: pd.read_orc(path),
         "extension": "orc",
     },
