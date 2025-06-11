@@ -7,3 +7,9 @@ RUN apt-get update && apt-get upgrade -y
 
 # Python pandas for DataFrame handling
 RUN pip3 install --upgrade pandas
+
+# Set working directory
+WORKDIR /app
+
+# Copy my project code into the image
+COPY . .
