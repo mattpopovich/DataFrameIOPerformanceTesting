@@ -1,2 +1,2 @@
 # DataFrame I/O Performance Testing
-Testing the speeds and compression of reading and writing DataFrames to files
+Testing the speeds and compression of reading and writing DataFrames to/from disk.
