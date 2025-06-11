@@ -4,8 +4,8 @@ import time
 
 
 # File paths
-input_path = "data_big.csv"
-output_path = "output.csv"
+input_path = "data.csv"
+output_name = "output"
 
 
 def read_csv_and_convert(path):
@@ -15,18 +15,26 @@ def read_csv_and_convert(path):
     return df
 
 
+write_csv = lambda df, output_path: df.to_csv(
+    output_path,
+    index=False,
+    float_format="%.8f",
+    date_format="%Y-%m-%dT%H:%M:%S.%f",
+)
+
 # IO to test
 formats = {
     "csv": {
-        "write": lambda df: df.to_csv(
-            output_path,
-            index=False,
-            float_format="%.8f",
-            date_format="%Y-%m-%dT%H:%M:%S.%f",
-        ),
+        "write": write_csv,
         "read": lambda path: read_csv_and_convert(path),
         "extension": "csv",
-    }
+    },
+    "csv.gz": {
+        "write": write_csv,
+        "read": lambda path: read_csv_and_convert(path),
+        "extension": "csv.gz",
+    },
+    # TODO: lots more .csv tests
 }
 
 results: list[dict] = []
@@ -46,21 +54,19 @@ df.info()
 print()
 
 for format, operation in formats.items():
+    output_path = output_name + "." + operation["extension"]
 
     ### Write tests
     start_time_s = time.perf_counter()
-    operation["write"](df)
+    operation["write"](df, output_path)
     end_time_s = time.perf_counter()
     write_time_s = end_time_s - start_time_s
 
     output_file_size_B = os.path.getsize(output_path)
 
-    #### Make sure written file matches
-    with open("data.csv", "rb") as f1, open(output_path, "rb") as f2:
-        if f1.read() == f2.read():
-            print(f"'{output_path}' matched.")
-        else:
-            print(f"'{output_path}' does not match '{input_path}'.")
+    # Only non-compressed .csv file should match
+    with open(input_path, "rb") as f1, open(output_path, "rb") as f2:
+        csv_files_equal = f1.read() == f2.read()
 
     #### Make sure we can read back into a DataFrame
     start_time_s = time.perf_counter()
@@ -79,10 +85,14 @@ for format, operation in formats.items():
     results.append(
         {
             "Format": format,
-            "Write time to file": write_time_s,
-            "Read time from file": read_time_s,
+            "Original DataFrame Memory (kB)": df.memory_usage().sum() / 1000,
+            "Write time to file (s)": write_time_s,
+            "Read time from file (s)": read_time_s,
+            "Total I/O (s)": write_time_s + read_time_s,
             "Output File Size (kB)": output_file_size_B / 1000,
+            "Final DataFrame Memory (kB)": df2.memory_usage().sum() / 1000,
             "Equivalent DataFrames": df.equals(df2),
+            "Equivalent .csv files": csv_files_equal,
         }
     )
 
