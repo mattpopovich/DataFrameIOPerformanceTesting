@@ -21,7 +21,8 @@
 				"ms-python.python", // Python intellisense
 				"ms-python.black-formatter", // Black formatter
 				"mechatroner.rainbow-csv", // Easier to view csv files
-				"streetsidesoftware.code-spell-checker" // Spell check
+				"streetsidesoftware.code-spell-checker", // Spell check
+				"github.vscode-github-actions"
 			],
 			"settings": {
 				"editor.formatOnSave": true,
