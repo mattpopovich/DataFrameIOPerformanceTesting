@@ -1,4 +1,4 @@
-name: Run Pytest in Docker
+name: Run Tests in Docker
 
 on: [push, pull_request]
 
