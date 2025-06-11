@@ -32,6 +32,13 @@ formats = {
     # TODO: lots more .csv tests
     # TODO: zip tests
     # TODO: pickle, parquet tests
+    "pickle": {
+        "write": lambda df, output_path: df.to_pickle(output_path),
+        "compressions": [None, "gzip", "bz2", "zstd", "xz", "tar"],
+        "compresslevel": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        "read": lambda path: pd.read_pickle(path),
+        "extension": "pkl",
+    },
     "feather": {
         "write": lambda df, output_path: df.to_feather(output_path),
         "read": lambda path: pd.read_feather(path),
