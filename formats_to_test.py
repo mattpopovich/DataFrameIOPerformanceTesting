@@ -21,20 +21,37 @@ write_csv = lambda df, output_path: df.to_csv(
 formats = {
     "csv": {
         "write": write_csv,
+        "compressions": [
+            None,
+            "gz",
+            "bz2",
+            "zip",
+            "xz",
+            "zstd",
+            "tar",
+            "tar.gz",
+            "tar.xz",
+            "tar.bz2",
+        ],
         "read": lambda path: read_csv_and_convert(path),
         "extension": "csv",
     },
-    "csv.gz": {
-        "write": write_csv,
-        "read": lambda path: read_csv_and_convert(path),
-        "extension": "csv.gz",
-    },
-    # TODO: lots more .csv tests
     # TODO: zip tests
-    # TODO: pickle, parquet tests
+    # TODO: parquet tests
     "pickle": {
         "write": lambda df, output_path: df.to_pickle(output_path),
-        "compressions": [None, "gzip", "bz2", "zstd", "xz", "tar"],
+        "compressions": [
+            None,
+            "gz",
+            "bz2",
+            "zip",
+            "xz",
+            "zstd",
+            "tar",
+            "tar.gz",
+            "tar.xz",
+            "tar.bz2",
+        ],
         "compresslevel": [1, 2, 3, 4, 5, 6, 7, 8, 9],
         "read": lambda path: pd.read_pickle(path),
         "extension": "pkl",

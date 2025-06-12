@@ -80,10 +80,10 @@ for format, operation in formats.items():
                 "Read time from file (s)": read_time_s,
                 "Total I/O (s)": total_io_s,
                 "Output File Size (kB)": output_file_size_B / 1e3,
-                "Score (s*kB)": total_io_s * output_file_size_B / 1e3,
+                "Score (s*MB)": total_io_s + output_file_size_B / 1e6,
                 "Equivalent DataFrames": df.equals(df2),
             }
         )
 
 results_df = pd.DataFrame(results)
-print(results_df.sort_values("Score (s*kB)"))  # Lower score is better
+print(results_df.sort_values("Score (s*MB)"))  # Lower score is better
