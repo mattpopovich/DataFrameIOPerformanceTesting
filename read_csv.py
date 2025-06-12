@@ -2,13 +2,18 @@ import pandas as pd
 import os
 import time
 
+from textwrap import wrap
+from tabulate import tabulate
+
 from formats_to_test import formats
+from pretty_print_dataframe import pretty_print_dataframe
 
 ## TODO: Save temp files in a directory
 
 # File paths
-input_path = "data.csv"
+input_path = "data.csv"  # CHANGE THIS to get performance numbers for your file
 output_name = "output"
+score_header_name = "Score (s+MB)"
 
 
 results: list[dict] = []
@@ -80,10 +85,11 @@ for format, operation in formats.items():
                 "Read time from file (s)": read_time_s,
                 "Total I/O (s)": total_io_s,
                 "Output File Size (kB)": output_file_size_B / 1e3,
-                "Score (s*MB)": total_io_s + output_file_size_B / 1e6,
+                score_header_name: total_io_s + output_file_size_B / 1e6,
                 "Equivalent DataFrames": df.equals(df2),
             }
         )
 
 results_df = pd.DataFrame(results)
-print(results_df.sort_values("Score (s*MB)"))  # Lower score is better
+results_df = results_df.sort_values(score_header_name)  # Lower score is better
+pretty_print_dataframe(results_df)

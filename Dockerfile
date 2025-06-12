@@ -14,6 +14,9 @@ RUN pip3 install --upgrade pyarrow
 # Pytables for .h5 files
 RUN pip3 install --upgrade tables
 
+# Pretty printing tables
+RUN pip3 install --upgrade tabulate rich
+
 # Set working directory
 WORKDIR /app
 
