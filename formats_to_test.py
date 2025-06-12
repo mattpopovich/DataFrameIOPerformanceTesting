@@ -17,22 +17,25 @@ write_csv = lambda df, output_path: df.to_csv(
     index=False,
 )
 
+# Given in https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_pickle.html
+list_of_compressions = [
+    None,
+    "gz",
+    "bz2",
+    "zip",
+    "xz",
+    "zstd",
+    "tar",
+    "tar.gz",
+    "tar.xz",
+    "tar.bz2",
+]
+
 # IO to test
 formats = {
     "csv": {
         "write": write_csv,
-        "compressions": [
-            None,
-            "gz",
-            "bz2",
-            "zip",
-            "xz",
-            "zstd",
-            "tar",
-            "tar.gz",
-            "tar.xz",
-            "tar.bz2",
-        ],
+        "compressions": list_of_compressions,
         "read": lambda path: read_csv_and_convert(path),
         "extension": "csv",
     },
@@ -40,19 +43,7 @@ formats = {
     # TODO: parquet tests
     "pickle": {
         "write": lambda df, output_path: df.to_pickle(output_path),
-        "compressions": [
-            None,
-            "gz",
-            "bz2",
-            "zip",
-            "xz",
-            "zstd",
-            "tar",
-            "tar.gz",
-            "tar.xz",
-            "tar.bz2",
-        ],
-        "compresslevel": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        "compressions": list_of_compressions,
         "read": lambda path: pd.read_pickle(path),
         "extension": "pkl",
     },
