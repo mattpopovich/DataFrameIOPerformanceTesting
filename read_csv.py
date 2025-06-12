@@ -10,7 +10,7 @@ from pretty_print_dataframe import pretty_print_dataframe
 
 # File paths
 input_path = "data.csv"  # CHANGE THIS to get performance numbers for your file
-output_name = "output"
+output_file_name = "output"
 output_folder_name = "outputs"
 score_header_name = "Score (s+MB)"
 
@@ -45,12 +45,12 @@ for format, operation in formats.items():
         print(f"analyzing compression {compression}")
 
         if compression:
-            output_path = output_folder_name + "/" + output_name + "." + compression
+            output_path = output_folder_name + "/" + output_file_name + "." + compression
             full_format = format + ", " + compression
         else:
             full_format = format
             output_path = (
-                output_folder_name + "/" + output_name + "." + operation["extension"]
+                output_folder_name + "/" + output_file_name + "." + operation["extension"]
             )
 
         ### Write tests
@@ -76,9 +76,7 @@ for format, operation in formats.items():
         end_time_s = time.perf_counter()
         read_time_s = end_time_s - start_time_s
 
-        dataframe_memory_difference_B = (
-            df2.memory_usage().sum() - df.memory_usage().sum()
-        )
+        dataframe_memory_difference_B = df2.memory_usage().sum() - df.memory_usage().sum()
         total_io_s = write_time_s + read_time_s
         results.append(
             {
