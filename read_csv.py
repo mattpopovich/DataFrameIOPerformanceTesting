@@ -8,16 +8,16 @@ from tabulate import tabulate
 from formats_to_test import formats
 from pretty_print_dataframe import pretty_print_dataframe
 
-## TODO: Save temp files in a directory
-
 # File paths
 input_path = "data.csv"  # CHANGE THIS to get performance numbers for your file
 output_name = "output"
+output_folder_name = "outputs"
 score_header_name = "Score (s+MB)"
 
 
 results: list[dict] = []
 
+os.makedirs(output_folder_name, exist_ok=True)
 df = pd.read_csv(input_path)
 
 print(f"DataFrame initially read into memory:")
@@ -33,6 +33,7 @@ df.info()
 print()
 
 for format, operation in formats.items():
+
     print(f"analyzing format {format}")
 
     if "compressions" in operation:
@@ -40,15 +41,17 @@ for format, operation in formats.items():
     else:
         compressions = [False]
 
-    output_path = output_name + "." + operation["extension"]
-    full_format = format
-
     for compression in compressions:
         print(f"analyzing compression {compression}")
 
         if compression:
-            output_path = output_name + "." + compression
+            output_path = output_folder_name + "/" + output_name + "." + compression
             full_format = format + ", " + compression
+        else:
+            full_format = format
+            output_path = (
+                output_folder_name + "/" + output_name + "." + operation["extension"]
+            )
 
         ### Write tests
         start_time_s = time.perf_counter()

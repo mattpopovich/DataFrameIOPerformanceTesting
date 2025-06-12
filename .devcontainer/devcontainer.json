@@ -26,6 +26,9 @@
 			],
 			"settings": {
 				"editor.formatOnSave": true,
+				"editor.rulers": [
+					88
+				],
 				"files.autoSave": "onFocusChange"
 			}
 		}
