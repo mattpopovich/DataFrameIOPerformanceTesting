@@ -13,6 +13,7 @@ from FeatherFormat import FeatherFormat
 from HdfFormat import HdfFormat
 from OrcFormat import OrcFormat
 from PickleFormat import PickleFormat
+from ParquetFormat import ParquetFormat
 
 from common import list_of_compressions, default_folder_name
 
@@ -30,6 +31,10 @@ formats.extend(PickleFormat(compression) for compression in list_of_compressions
 formats.append(FeatherFormat())
 formats.append(HdfFormat())
 formats.append(OrcFormat())
+formats.extend(
+    ParquetFormat(compression)
+    for compression in [None, "snappy", "gzip", "brotli", "lz4", "zstd"]
+)
 
 os.makedirs(default_folder_name, exist_ok=True)
 df = pd.read_csv(input_path)
