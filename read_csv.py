@@ -5,91 +5,79 @@ import time
 from textwrap import wrap
 from tabulate import tabulate
 
-from formats_to_test import formats
 from pretty_print_dataframe import pretty_print_dataframe
 
-# File paths
+from BasicFormat import BasicFormat
+from CsvFormat import CsvFormat
+from FeatherFormat import FeatherFormat
+from HdfFormat import HdfFormat
+from OrcFormat import OrcFormat
+from PickleFormat import PickleFormat
+
+from common import list_of_compressions, default_folder_name
+
+# Constants
 input_path = "data.csv"  # CHANGE THIS to get performance numbers for your file
-output_file_name = "output"
-output_folder_name = "outputs"
 score_header_name = "Score (s+MB)"
 
 
 results: list[dict] = []
+formats: list[BasicFormat] = []
 
-os.makedirs(output_folder_name, exist_ok=True)
+# Create the formats that we want to test
+formats.extend(CsvFormat(compression) for compression in list_of_compressions)
+formats.extend(PickleFormat(compression) for compression in list_of_compressions)
+formats.append(FeatherFormat())
+formats.append(HdfFormat())
+formats.append(OrcFormat())
+
+os.makedirs(default_folder_name, exist_ok=True)
 df = pd.read_csv(input_path)
 
 print(f"DataFrame initially read into memory:")
 df.info()
 print()
 
-### Convert dataframe into correct datatypes here ###
+# Convert dataframe into correct datatypes here
 first_column = df.columns[0]
 df[first_column] = pd.to_datetime(df[first_column])
-#####################################################
 print(f"DataFrame after converting to correct data types:")
 df.info()
 print()
 
-for format, operation in formats.items():
+for format in formats:
 
     print(f"analyzing format {format}")
 
-    if "compressions" in operation:
-        compressions = operation["compressions"]
-    else:
-        compressions = [False]
+    ### Write tests
+    start_time_s = time.perf_counter()
+    format.write(df)
+    end_time_s = time.perf_counter()
+    write_time_s = end_time_s - start_time_s
 
-    for compression in compressions:
-        print(f"analyzing compression {compression}")
+    print(f"wrote output path {format.file_path}")
+    output_file_size_B = os.path.getsize(format.file_path)
 
-        if compression:
-            output_path = output_folder_name + "/" + output_file_name + "." + compression
-            full_format = format + ", " + compression
-        else:
-            full_format = format
-            output_path = (
-                output_folder_name + "/" + output_file_name + "." + operation["extension"]
-            )
+    #### Make sure we can read back into a DataFrame
+    start_time_s = time.perf_counter()
+    df2 = format.read()
+    end_time_s = time.perf_counter()
+    read_time_s = end_time_s - start_time_s
 
-        ### Write tests
-        start_time_s = time.perf_counter()
-        if compression == False:
-            operation["write"](df, output_path)
-        else:
-            if compression == None:
-                compression_dict = None
-            else:
-                compression_dict = {"method": compression}
-
-            operation["write"](df, output_path)
-        end_time_s = time.perf_counter()
-        write_time_s = end_time_s - start_time_s
-
-        print(f"wrote output path {output_path}")
-        output_file_size_B = os.path.getsize(output_path)
-
-        #### Make sure we can read back into a DataFrame
-        start_time_s = time.perf_counter()
-        df2 = operation["read"](output_path)
-        end_time_s = time.perf_counter()
-        read_time_s = end_time_s - start_time_s
-
-        dataframe_memory_difference_B = df2.memory_usage().sum() - df.memory_usage().sum()
-        total_io_s = write_time_s + read_time_s
-        results.append(
-            {
-                "Format": full_format,
-                "DataFrame Memory Difference (B)": dataframe_memory_difference_B,
-                "Write time to file (s)": write_time_s,
-                "Read time from file (s)": read_time_s,
-                "Total I/O (s)": total_io_s,
-                "Output File Size (kB)": output_file_size_B / 1e3,
-                score_header_name: total_io_s + output_file_size_B / 1e6,
-                "Equivalent DataFrames": df.equals(df2),
-            }
-        )
+    dataframe_memory_difference_B = df2.memory_usage().sum() - df.memory_usage().sum()
+    total_io_s = write_time_s + read_time_s
+    results.append(
+        {
+            "Format": format,
+            "DataFrame Memory Difference (B)": dataframe_memory_difference_B,
+            "Write time to file (s)": write_time_s,
+            "Read time from file (s)": read_time_s,
+            "Total I/O (s)": total_io_s,
+            "Output File Size (kB)": output_file_size_B / 1e3,
+            score_header_name: total_io_s + output_file_size_B / 1e6,
+            "Equivalent DataFrames": df.equals(df2),
+        }
+    )
 
 results_df = pd.DataFrame(results)
 results_df = results_df.sort_values(score_header_name)  # Lower score is better
