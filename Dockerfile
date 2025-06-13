@@ -20,6 +20,9 @@ RUN pip3 install --upgrade tabulate rich
 # Progress bar
 RUN pip3 install --upgrade tqdm
 
+# Zstandard compression library
+RUN pip3 install --upgrade zstandard
+
 # Set working directory
 WORKDIR /app
 

@@ -6,10 +6,10 @@ list_of_compressions = [
     "zip",
     "xz",
     "zstd",
-    "tar",
-    "tar.gz",
-    "tar.xz",
-    "tar.bz2",
+    # "tar",        # .tar just combines things into one file. No compression
+    # "tar.gz",     # Same as .gz
+    # "tar.xz",     # same as .xz
+    # "tar.bz2",    # Same as .bz2
 ]
 
 default_file_name = "output"
