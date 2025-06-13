@@ -4,6 +4,7 @@ import time
 
 from textwrap import wrap
 from tabulate import tabulate
+from tqdm import tqdm
 
 from pretty_print_dataframe import pretty_print_dataframe
 
@@ -50,9 +51,9 @@ print(f"DataFrame after converting to correct data types:")
 df.info()
 print()
 
-for format in formats:
+for format in tqdm(formats):
 
-    print(f"analyzing format {format}")
+    # print(f"analyzing format {format}")
 
     ### Write tests
     start_time_s = time.perf_counter()
@@ -60,7 +61,7 @@ for format in formats:
     end_time_s = time.perf_counter()
     write_time_s = end_time_s - start_time_s
 
-    print(f"wrote output path {format.file_path}")
+    # print(f"wrote output path {format.file_path}")
     output_file_size_B = os.path.getsize(format.file_path)
 
     #### Make sure we can read back into a DataFrame
