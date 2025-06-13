@@ -26,15 +26,19 @@ results: list[dict] = []
 formats: list[BasicFormat] = []
 
 # Create the formats that we want to test
-formats.extend(CsvFormat(compression) for compression in list_of_compressions)
-formats.extend(PickleFormat(compression) for compression in list_of_compressions)
-formats.append(FeatherFormat())
-formats.append(HdfFormat())
-formats.append(OrcFormat())
+# formats.extend(CsvFormat(compression) for compression in list_of_compressions)
 formats.extend(
-    ParquetFormat(compression)
-    for compression in [None, "snappy", "gzip", "brotli", "lz4", "zstd"]
+    PickleFormat(compression, None)
+    for compression in ["tar"]
+    # for compression_level in range(0, 10)
 )
+# formats.append(FeatherFormat())
+# formats.append(HdfFormat())
+# formats.append(OrcFormat())
+# formats.extend(
+#     ParquetFormat(compression)
+#     for compression in [None, "snappy", "gzip", "brotli", "lz4", "zstd"]
+# )
 
 os.makedirs(default_folder_name, exist_ok=True)
 df = pd.read_csv(input_path)
@@ -85,5 +89,5 @@ for format in formats:
     )
 
 results_df = pd.DataFrame(results)
-results_df = results_df.sort_values(score_header_name)  # Lower score is better
+results_df = results_df.sort_values("Output File Size (kB)")  # Lower score is better
 pretty_print_dataframe(results_df)
