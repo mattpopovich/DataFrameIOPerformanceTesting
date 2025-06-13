@@ -87,4 +87,5 @@ for format in tqdm(formats):
 
 results_df = pd.DataFrame(results)
 results_df = results_df.sort_values(score_header_name)  # Lower score is better
+# results_df = results_df.sort_values("Output File Size (kB)")  # Identify bad compressions
 pretty_print_dataframe(results_df)
