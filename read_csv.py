@@ -18,6 +18,10 @@ from ParquetFormat import ParquetFormat
 
 from common import list_of_compressions, default_folder_name
 
+# TODO: flag to specify their own csv file
+# TODO: flag to not save output files
+# TODO: Flag to not run all the permutations of compressions
+
 # Constants
 input_path = "data.csv"  # CHANGE THIS to get performance numbers for your file
 score_header_name = "Score (s+MB)"
@@ -28,7 +32,27 @@ formats: list[BasicFormat] = []
 
 # Create the formats that we want to test
 formats.extend(CsvFormat(compression) for compression in list_of_compressions)
-formats.extend(PickleFormat(compression) for compression in list_of_compressions)
+formats.extend(
+    PickleFormat(compression, compression_level)
+    for compression in ["zip", "xz"]
+    for compression_level in list(range(0, 10)) + [None]
+)
+formats.extend(
+    PickleFormat(compression, compression_level)
+    for compression in ["gzip"]
+    for compression_level in list(range(-1, 10)) + [None]
+)  # Not sure why -1 works but we'll include it
+formats.extend(
+    PickleFormat(compression, compression_level)
+    for compression in ["bz2"]
+    for compression_level in list(range(1, 10)) + [None]
+)
+formats.extend(
+    PickleFormat(compression, compression_level)
+    for compression in ["zstd"]
+    for compression_level in list(range(-7, 23)) + [None]
+)
+formats.append(PickleFormat(None, None))
 formats.append(FeatherFormat())
 formats.append(HdfFormat())
 formats.append(OrcFormat())
