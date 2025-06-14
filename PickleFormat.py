@@ -13,15 +13,11 @@ class PickleFormat(BasicFormat):
         self._compression_extension = self._compression
         self._compression_level = compression_level
 
-        # When specifying the compression level, pickle can only read if file extension
-        #   is .zst
-        if self._compression_extension == "zstd":
-            self._compression_extension = "zst"
+        # The compression type is zstd but the file extension is zst
+        self._compression_extension = "zst" if compression == "zstd" else compression
 
         # Add compression to file path (if necessary)
-        self._compression_path = (
-            "." + self._compression_extension if self._compression else ""
-        )
+        self._compression_path = "." + self._compression_extension if compression else ""
         self.file_path += self._compression_path
 
     def __str__(self):

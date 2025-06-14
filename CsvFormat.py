@@ -10,9 +10,11 @@ class CsvFormat(BasicFormat):
     def __init__(self, compression: str | None):
         super().__init__(extension="csv")
         self._compression = compression
+        # The compression type is zstd but the file extension is zst
+        self._compression_extension = "zst" if compression == "zstd" else compression
 
         # Add compression to file path (if necessary)
-        self._compression_path = "." + self._compression if self._compression else ""
+        self._compression_path = "." + self._compression_extension if compression else ""
         self.file_path += self._compression_path
 
     def __str__(self):

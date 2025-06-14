@@ -19,6 +19,7 @@ class ParquetFormat(BasicFormat):
         return self._extension + self._compression_path
 
     def write(self, df: pd.DataFrame) -> None:
+        # https://stackoverflow.com/a/77105313/4368898
         # TODO: Specify engines["pyarrow", "fastparquet"]
         df.to_parquet(self.file_path, compression=self._compression, index=False)
 
