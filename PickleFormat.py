@@ -53,7 +53,6 @@ class PickleFormat(BasicFormat):
                 "method": self._compression,
                 self._compression_key: self._compression_level,
             }
-            print(f"Writing pickle with compression dict = {compression_dict}")
             df.to_pickle(self.file_path, compression=compression_dict)
         else:
             # .to_pickle will detect compression type based on the path given

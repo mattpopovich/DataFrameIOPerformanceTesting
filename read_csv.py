@@ -24,7 +24,13 @@ from common import list_of_compressions, default_folder_name
 
 # Constants
 input_path = "data.csv"  # CHANGE THIS to get performance numbers for your file
-score_header_name = "Score (s+MB)"
+
+# DataFrame keys (_t ~ titles)
+score_t = "Score (lower is better)"
+total_io_normalized_t = "Total I/O Normalized"
+output_file_size_orig_t = "Output File Size (% Orig.)"
+output_file_size_norm_t = "Output File Size Normalized"
+total_io_t = "Total I/O (s)"
 
 
 results: list[dict] = []
@@ -63,6 +69,7 @@ formats.extend(
 
 os.makedirs(default_folder_name, exist_ok=True)
 df = pd.read_csv(input_path)
+input_file_size_B = os.path.getsize(input_path)
 
 print(f"DataFrame initially read into memory:")
 df.info()
@@ -102,14 +109,23 @@ for format in tqdm(formats):
             "DataFrame Memory Difference (B)": dataframe_memory_difference_B,
             "Write time to file (s)": write_time_s,
             "Read time from file (s)": read_time_s,
-            "Total I/O (s)": total_io_s,
-            "Output File Size (kB)": output_file_size_B / 1e3,
-            score_header_name: total_io_s + output_file_size_B / 1e6,
+            total_io_t: total_io_s,
+            output_file_size_orig_t: output_file_size_B / input_file_size_B * 100,
             "Equivalent DataFrames": df.equals(df2),
         }
     )
 
 results_df = pd.DataFrame(results)
-results_df = results_df.sort_values(score_header_name)  # Lower score is better
+
+# Define your desired score here
+results_df[total_io_normalized_t] = results_df[total_io_t] / min(results_df[total_io_t])
+results_df[output_file_size_norm_t] = results_df[output_file_size_orig_t] / min(
+    results_df[output_file_size_orig_t]
+)
+results_df[score_t] = (
+    results_df[total_io_normalized_t] + results_df[output_file_size_norm_t]
+)
+
+results_df = results_df.sort_values(score_t)  # Lower score is better
 # results_df = results_df.sort_values("Output File Size (kB)")  # Identify bad compressions
 pretty_print_dataframe(results_df)
