@@ -25,10 +25,12 @@ class BasicFormat(ABC):
 
     @abstractmethod
     def write(self, df: pd.DataFrame) -> None:
-        """Implement the format-specific writing of the data"""
+        """
+        Implement the format-specific writing of the data. Writes to self.file_path
+        """
         raise NotImplementedError
 
     @abstractmethod
     def read(self):
-        """Implement the format-specific reading of the data"""
+        """Implement the format-specific reading of the data. Reads from self.file_path"""
         raise NotImplementedError

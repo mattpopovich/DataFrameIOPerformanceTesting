@@ -20,8 +20,6 @@ from ParquetFormat import ParquetFormat
 from common import list_of_compressions, default_folder_name
 
 # TODO: flag to specify their own csv file
-# TODO: flag to not save output files
-# TODO: Flag to not run all the permutations of compressions
 
 # Constants
 input_path = "data.csv"  # CHANGE THIS to get performance numbers for your file
@@ -39,6 +37,9 @@ parser.add_argument(
     "--verbose",
     help="Run with all possible compression levels",
     action="store_true",
+)
+parser.add_argument(
+    "-k", "--keep", help="Keep all generated output files", action="store_true"
 )
 args = parser.parse_args()
 
@@ -123,6 +124,9 @@ for format in tqdm(formats):
             "Equivalent DataFrames": df.equals(df2),
         }
     )
+
+    if not args.keep:
+        os.remove(format.file_path)
 
 results_df = pd.DataFrame(results)
 
