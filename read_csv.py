@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import time
+import argparse
 
 from textwrap import wrap
 from tabulate import tabulate
@@ -32,6 +33,14 @@ output_file_size_orig_t = "Output File Size (% Orig.)"
 output_file_size_norm_t = "Output File Size Normalized"
 total_io_t = "Total I/O (s)"
 
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "-v",
+    "--verbose",
+    help="Run with all possible compression levels",
+    action="store_true",
+)
+args = parser.parse_args()
 
 results: list[dict] = []
 formats: list[BasicFormat] = []
@@ -41,22 +50,22 @@ formats.extend(CsvFormat(compression) for compression in list_of_compressions)
 formats.extend(
     PickleFormat(compression, compression_level)
     for compression in ["zip", "xz"]
-    for compression_level in list(range(0, 10)) + [None]
+    for compression_level in (list(range(0, 10)) + [None] if args.verbose else [None])
 )
 formats.extend(
     PickleFormat(compression, compression_level)
     for compression in ["gzip"]
-    for compression_level in list(range(-1, 10)) + [None]
+    for compression_level in (list(range(-1, 10)) + [None] if args.verbose else [None])
 )  # Not sure why -1 works but we'll include it
 formats.extend(
     PickleFormat(compression, compression_level)
     for compression in ["bz2"]
-    for compression_level in list(range(1, 10)) + [None]
+    for compression_level in (list(range(1, 10)) + [None] if args.verbose else [None])
 )
 formats.extend(
     PickleFormat(compression, compression_level)
     for compression in ["zstd"]
-    for compression_level in list(range(-7, 23)) + [None]
+    for compression_level in (list(range(-7, 23)) + [None] if args.verbose else [None])
 )
 formats.append(PickleFormat(None, None))
 formats.append(FeatherFormat())
