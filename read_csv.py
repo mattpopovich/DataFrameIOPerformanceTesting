@@ -3,8 +3,6 @@ import os
 import time
 import argparse
 
-from textwrap import wrap
-from tabulate import tabulate
 from tqdm import tqdm
 
 from pretty_print_dataframe import pretty_print_dataframe
@@ -19,10 +17,6 @@ from ParquetFormat import ParquetFormat
 
 from common import list_of_compressions, default_folder_name
 
-# TODO: flag to specify their own csv file
-
-# Constants
-input_path = "data.csv"  # CHANGE THIS to get performance numbers for your file
 
 # DataFrame keys (_t ~ titles)
 score_t = "Score (lower is better)"
@@ -33,18 +27,22 @@ total_io_t = "Total I/O (s)"
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
+    "-f", "--file", help="Specify the file that should be used for analysis"
+)
+parser.add_argument(
+    "-k", "--keep", help="Keep all generated output files", action="store_true"
+)
+parser.add_argument(
     "-v",
     "--verbose",
     help="Run with all possible compression levels",
     action="store_true",
 )
-parser.add_argument(
-    "-k", "--keep", help="Keep all generated output files", action="store_true"
-)
 args = parser.parse_args()
 
 results: list[dict] = []
 formats: list[BasicFormat] = []
+input_path: str = "data.csv" if not args.file else args.file  # Default if no arg passed
 
 # Create the formats that we want to test
 formats.extend(CsvFormat(compression) for compression in list_of_compressions)
@@ -81,7 +79,7 @@ os.makedirs(default_folder_name, exist_ok=True)
 df = pd.read_csv(input_path)
 input_file_size_B = os.path.getsize(input_path)
 
-print(f"DataFrame initially read into memory:")
+print(f"DataFrame initially read into memory from {input_path}:")
 df.info()
 print()
 
@@ -96,7 +94,7 @@ for format in tqdm(formats):
 
     # print(f"analyzing format {format}")
 
-    ### Write tests
+    # Write tests
     start_time_s = time.perf_counter()
     format.write(df)
     end_time_s = time.perf_counter()
@@ -105,7 +103,7 @@ for format in tqdm(formats):
     # print(f"wrote output path {format.file_path}")
     output_file_size_B = os.path.getsize(format.file_path)
 
-    #### Make sure we can read back into a DataFrame
+    # Make sure we can read back into a DataFrame
     start_time_s = time.perf_counter()
     df2 = format.read()
     end_time_s = time.perf_counter()
@@ -130,7 +128,7 @@ for format in tqdm(formats):
 
 results_df = pd.DataFrame(results)
 
-# Define your desired score here
+# Define the desired score here
 results_df[total_io_normalized_t] = results_df[total_io_t] / min(results_df[total_io_t])
 results_df[output_file_size_norm_t] = results_df[output_file_size_orig_t] / min(
     results_df[output_file_size_orig_t]

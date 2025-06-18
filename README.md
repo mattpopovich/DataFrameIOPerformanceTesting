@@ -1,15 +1,60 @@
 # DataFrame I/O Performance Testing
-Testing the speeds and compression of reading and writing DataFrames to/from disk.
+This repo was created to test the speed of reading and writing DataFrames to/from disk using different file and compression types.
 
-## The Situation
-You: Have data. You read it, store it, use it. You want to know what is the "best" way to do this.
+## Target Audience
+You have data. You read it, store it, use it with Python and Pandas `DataFrame`s. You want to know what is the "best" way to do this.
 
-This repo: Specify your `.csv` file, the repo will load it into a Pandas `DataFrame` then write it and read it through all the many options that Python/Pandas provides. Lastly, it will give you a summary of the performance statistics.
+## How This Repo Works
+This repo will load data into a Pandas `DataFrame`. It will then write and read the `DataFrame` through all the many options that Python/Pandas provides. Lastly, it will give you a summary of the time it took to write to file, read from file, and the filesize.
+
+You may need to modify the code such that your input file is read in correctly. My sample file, `data.csv` is time series data with the first column specifying the date and time.
 
 ## How to Use
-Modify the `input_path` in `read_csv.py`. Then run it: `python3 read_csv.py`. A Dockerfile is provided to manage the repo's requirements.
+Run the following file to perform analysis: `python3 read_csv.py`. A Dockerfile is provided to manage the repo's requirements.
 
-Example output with a 7.4MB `.csv` file for `input_path`:
+The following arguments are supported:
+- `-f` or `--file`
+  - Specify the file used for input
+- `-k` or `--keep`
+  - Do not delete the generated files used for analysis in `/outputs`
+- `-v` or `--verbose`
+  - For every compression type that supports it, test different levels of compression
+
+Example output of `read_csv.py` with a 7.4MB `.csv` file:
+```
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃                ┃ DataFrame  ┃          ┃ Read     ┃          ┃           ┃            ┃            ┃            ┃            ┃
+┃                ┃ Memory     ┃ Write    ┃ time     ┃          ┃ Output    ┃            ┃            ┃ Output     ┃ Score      ┃
+┃                ┃ Difference ┃ time to  ┃ from     ┃ Total    ┃ File Size ┃ Equivalent ┃ Total I/O  ┃ File Size  ┃ (lower is  ┃
+┃ Format         ┃ (B)        ┃ file (s) ┃ file (s) ┃ I/O (s)  ┃ (% Orig.) ┃ DataFrames ┃ Normalized ┃ Normalized ┃ better)    ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━┩
+│ pkl.zst        │ 0          │ 0.010192 │ 0.005257 │ 0.015449 │ 6.259999  │ True       │ 1.701586   │ 1.694927   │ 3.396513   │
+│ parquet.zstd   │ 0          │ 0.019387 │ 0.00511  │ 0.024497 │ 11.759927 │ True       │ 2.698121   │ 3.184062   │ 5.882183   │
+│ feather        │ 0          │ 0.011043 │ 0.003958 │ 0.015001 │ 15.818745 │ True       │ 1.652261   │ 4.283008   │ 5.935269   │
+│ parquet.lz4    │ 0          │ 0.01992  │ 0.005158 │ 0.025078 │ 12.35391  │ True       │ 2.762136   │ 3.344886   │ 6.107022   │
+│ parquet.snappy │ 0          │ 0.020013 │ 0.005856 │ 0.025869 │ 12.329412 │ True       │ 2.849198   │ 3.338253   │ 6.187451   │
+│ parquet        │ 0          │ 0.019558 │ 0.008671 │ 0.02823  │ 15.835501 │ True       │ 3.109251   │ 4.287545   │ 7.396796   │
+│ pkl.zip        │ 0          │ 0.059021 │ 0.014993 │ 0.074014 │ 6.216931  │ True       │ 8.152009   │ 1.683266   │ 9.835275   │
+│ parquet.gzip   │ 0          │ 0.066984 │ 0.007798 │ 0.074781 │ 8.955857  │ True       │ 8.236524   │ 2.424845   │ 10.661369  │
+│ parquet.brotli │ 0          │ 0.071883 │ 0.006661 │ 0.078545 │ 8.443639  │ True       │ 8.65099    │ 2.286159   │ 10.937149  │
+│ pkl            │ 0          │ 0.005481 │ 0.003598 │ 0.009079 │ 50.474198 │ True       │ 1          │ 13.666152  │ 14.666152  │
+│ pkl.gzip       │ 0          │ 0.007313 │ 0.004132 │ 0.011445 │ 50.474198 │ True       │ 1.260613   │ 13.666152  │ 14.926765  │
+│ orc            │ 0          │ 0.025718 │ 0.008819 │ 0.034538 │ 49.057234 │ True       │ 3.804036   │ 13.282502  │ 17.086538  │
+│ h5             │ 709932     │ 0.032673 │ 0.012626 │ 0.0453   │ 74.418713 │ True       │ 4.989381   │ 20.149255  │ 25.138635  │
+│ csv.zst        │ 0          │ 0.265542 │ 0.057527 │ 0.323069 │ 6.890039  │ True       │ 35.583226  │ 1.865514   │ 37.44874   │
+│ csv.zip        │ 0          │ 0.311246 │ 0.068284 │ 0.37953  │ 6.560124  │ True       │ 41.801929  │ 1.776188   │ 43.578117  │
+│ pkl.xz         │ 0          │ 0.432994 │ 0.034052 │ 0.467046 │ 4.891977  │ True       │ 51.440987  │ 1.324528   │ 52.765516  │
+│ csv            │ 0          │ 0.297642 │ 0.057744 │ 0.355385 │ 69.771367 │ True       │ 39.142592  │ 18.890961  │ 58.033553  │
+│ csv.gz         │ 0          │ 0.450601 │ 0.066621 │ 0.517221 │ 5.955232  │ True       │ 56.967412  │ 1.61241    │ 58.579822  │
+│ csv.bz2        │ 0          │ 0.53474  │ 0.105288 │ 0.640028 │ 5.06195   │ True       │ 70.493488  │ 1.370549   │ 71.864037  │
+│ pkl.bz2        │ 0          │ 0.600926 │ 0.050681 │ 0.651606 │ 7.560752  │ True       │ 71.768749  │ 2.047113   │ 73.815862  │
+│ csv.xz         │ 0          │ 1.962794 │ 0.083294 │ 2.046088 │ 3.693373  │ True       │ 225.358712 │ 1          │ 226.358712 │
+└────────────────┴────────────┴──────────┴──────────┴──────────┴───────────┴────────────┴────────────┴────────────┴────────────┘
+```
+
+<details>
+  <summary>Click to show the `--verbose` output for that file:</summary>
+
 ```
 ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┓
 ┃                ┃ DataFrame  ┃          ┃ Read     ┃          ┃           ┃            ┃            ┃            ┃            ┃
@@ -110,3 +155,5 @@ Example output with a 7.4MB `.csv` file for `input_path`:
 │ csv.xz         │ 0          │ 1.982927 │ 0.082158 │ 2.065085 │ 3.693373  │ True       │ 248.088124 │ 1          │ 249.088124 │
 └────────────────┴────────────┴──────────┴──────────┴──────────┴───────────┴────────────┴────────────┴────────────┴────────────┘
 ```
+
+</details>
