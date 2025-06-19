@@ -12,10 +12,9 @@ from CsvFormat import CsvFormat
 from FeatherFormat import FeatherFormat
 from HdfFormat import HdfFormat
 from OrcFormat import OrcFormat
-from PickleFormat import PickleFormat
 from ParquetFormat import ParquetFormat
 
-from common import list_of_compressions, default_folder_name
+from common import list_of_compressions, default_folder_name, get_pickle_formats
 
 
 # DataFrame keys (_t ~ titles)
@@ -46,27 +45,7 @@ input_path: str = "data.csv" if not args.file else args.file  # Default if no ar
 
 # Create the formats that we want to test
 formats.extend(CsvFormat(compression) for compression in list_of_compressions)
-formats.extend(
-    PickleFormat(compression, compression_level)
-    for compression in ["zip", "xz"]
-    for compression_level in (list(range(0, 10)) + [None] if args.verbose else [None])
-)
-formats.extend(
-    PickleFormat(compression, compression_level)
-    for compression in ["gzip"]
-    for compression_level in (list(range(-1, 10)) + [None] if args.verbose else [None])
-)  # Not sure why -1 works but we'll include it
-formats.extend(
-    PickleFormat(compression, compression_level)
-    for compression in ["bz2"]
-    for compression_level in (list(range(1, 10)) + [None] if args.verbose else [None])
-)
-formats.extend(
-    PickleFormat(compression, compression_level)
-    for compression in ["zstd"]
-    for compression_level in (list(range(-7, 23)) + [None] if args.verbose else [None])
-)
-formats.append(PickleFormat(None, None))
+formats.extend(get_pickle_formats(args.verbose))
 formats.append(FeatherFormat())
 formats.append(HdfFormat())
 formats.append(OrcFormat())
