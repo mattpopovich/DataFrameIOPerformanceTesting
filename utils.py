@@ -1,4 +1,5 @@
 from formats.PickleFormat import PickleFormat
+from formats.ParquetFormat import ParquetFormat
 
 
 def get_pickle_formats(verbose: bool) -> list[PickleFormat]:
@@ -34,4 +35,24 @@ def get_pickle_formats(verbose: bool) -> list[PickleFormat]:
         for compression_level in (list(range(-7, 23)) + [None] if verbose else [None])
     )
     formats.append(PickleFormat(None, None))
+    return formats
+
+
+def get_parquet_formats(verbose: bool) -> list[ParquetFormat]:
+    """
+    Returns a list of ParquetFormats containing compressions. If desired, also includes
+    different parquet engines.
+
+    Args:
+        verbose: True if you want different parquet engines, False otherwise
+
+    Returns:
+        List of `ParquetFormat`s
+    """
+    formats: list[ParquetFormat] = []
+    formats.extend(
+        ParquetFormat(compression, engine)
+        for compression in [None, "snappy", "gzip", "brotli", "lz4", "zstd"]
+        for engine in (["pyarrow", "fastparquet"] if verbose else ["auto"])
+    )
     return formats

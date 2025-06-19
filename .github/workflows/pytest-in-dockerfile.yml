@@ -32,10 +32,10 @@ jobs:
         cache-to: type=local,dest=/tmp/.buildx-cache
         load: true  # necessary so we can run the image locally with `docker run`
 
-    - name: Run performance tests inside Docker
+    - name: Run analyze_dataframe_io.py inside Docker
       run: |
         docker run --rm dataframe-io-performance-testing python3 analyze_dataframe_io.py
 
-    - name: Run tests inside Docker
+    - name: Run pytest inside Docker
       run: |
         docker run --rm dataframe-io-performance-testing pytest

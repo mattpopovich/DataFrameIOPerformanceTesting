@@ -24,7 +24,10 @@ RUN pip3 install --upgrade tqdm
 RUN pip3 install --upgrade zstandard
 
 # Unit testing
-RUN pip3 install -U pytest
+RUN pip3 install --upgrade pytest
+
+# Python implementation of Apache Parquet Format
+RUN pip3 install --upgrade fastparquet
 
 # Set working directory
 WORKDIR /app

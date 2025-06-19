@@ -12,9 +12,8 @@ from formats.CsvFormat import CsvFormat
 from formats.FeatherFormat import FeatherFormat
 from formats.HdfFormat import HdfFormat
 from formats.OrcFormat import OrcFormat
-from formats.ParquetFormat import ParquetFormat
 
-from utils import get_pickle_formats
+from utils import get_pickle_formats, get_parquet_formats
 from config import list_of_compressions, default_folder_name
 
 
@@ -52,10 +51,7 @@ formats.extend(get_pickle_formats(args.verbose))
 formats.append(FeatherFormat())
 formats.append(HdfFormat())
 formats.append(OrcFormat())
-formats.extend(
-    ParquetFormat(compression)
-    for compression in [None, "snappy", "gzip", "brotli", "lz4", "zstd"]
-)
+formats.extend(get_parquet_formats(args.verbose))
 
 os.makedirs(default_folder_name, exist_ok=True)
 df = pd.read_csv(input_path)
@@ -120,7 +116,7 @@ results_df[score_t] = (
 )
 
 results_df = results_df.sort_values(score_t)  # Lower score is better
-# results_df = results_df.sort_values("Output File Size (kB)")  # Identify bad compressions
+# results_df = results_df.sort_values(output_file_size_orig_t)  # Identify bad compressions
 
 # Remove unnecessary columns
 if not args.verbose:
