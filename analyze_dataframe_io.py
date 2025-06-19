@@ -24,6 +24,8 @@ total_io_normalized_t = "Total I/O Normalized"
 output_file_size_orig_t = "Output File Size (% Orig.)"
 output_file_size_norm_t = "Output File Size Normalized"
 total_io_t = "Total I/O (s)"
+dataframe_memory_difference_t = "DataFrame Memory Difference (B)"
+equivalent_dataframes_t = "Equivalent DataFrames"
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -35,7 +37,7 @@ parser.add_argument(
 parser.add_argument(
     "-v",
     "--verbose",
-    help="Run with all possible compression levels",
+    help="Run with all possible compression levels and show some additional columns",
     action="store_true",
 )
 args = parser.parse_args()
@@ -94,12 +96,12 @@ for format in tqdm(formats):
     results.append(
         {
             "Format": format,
-            "DataFrame Memory Difference (B)": dataframe_memory_difference_B,
+            dataframe_memory_difference_t: dataframe_memory_difference_B,
             "Write time to file (s)": write_time_s,
             "Read time from file (s)": read_time_s,
             total_io_t: total_io_s,
             output_file_size_orig_t: output_file_size_B / input_file_size_B * 100,
-            "Equivalent DataFrames": df.equals(df2),
+            equivalent_dataframes_t: df.equals(df2),
         }
     )
 
@@ -119,4 +121,10 @@ results_df[score_t] = (
 
 results_df = results_df.sort_values(score_t)  # Lower score is better
 # results_df = results_df.sort_values("Output File Size (kB)")  # Identify bad compressions
+
+# Remove unnecessary columns
+if not args.verbose:
+    results_df.drop(
+        columns=[dataframe_memory_difference_t, equivalent_dataframes_t], inplace=True
+    )
 pretty_print_dataframe(results_df)
