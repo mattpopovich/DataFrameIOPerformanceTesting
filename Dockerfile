@@ -23,6 +23,9 @@ RUN pip3 install --upgrade tqdm
 # Zstandard compression library
 RUN pip3 install --upgrade zstandard
 
+# Unit testing
+RUN pip3 install -U pytest
+
 # Set working directory
 WORKDIR /app
 
