@@ -14,7 +14,7 @@ from formats.HdfFormat import HdfFormat
 from formats.OrcFormat import OrcFormat
 from formats.ParquetFormat import ParquetFormat
 
-from common import get_pickle_formats
+from utils import get_pickle_formats
 from config import list_of_compressions, default_folder_name
 
 
