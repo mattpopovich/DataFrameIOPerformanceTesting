@@ -10,7 +10,7 @@ This repo will load data into a Pandas `DataFrame`. It will then write and read 
 You may need to modify the code such that your input file is read in correctly. My sample file, `data.csv` is time series data with the first column specifying the date and time.
 
 ## How to Use
-Run the following file to perform analysis: `python3 read_csv.py`. A Dockerfile is provided to manage the repo's requirements.
+Run the following file to perform analysis: `python3 analyze_dataframe_io.py`. A Dockerfile is provided to manage the repo's requirements.
 
 The following arguments are supported:
 - `-f` or `--file`
@@ -20,7 +20,7 @@ The following arguments are supported:
 - `-v` or `--verbose`
   - For every compression type that supports it, test different levels of compression
 
-Example output of `read_csv.py` with a 7.4MB `.csv` file:
+Example output of `analyze_dataframe_io.py` with a 7.4MB `.csv` file:
 ```
 ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┓
 ┃                ┃ DataFrame  ┃          ┃ Read     ┃          ┃           ┃            ┃            ┃            ┃            ┃

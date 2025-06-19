@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import pandas as pd
-from common import default_file_name, default_folder_name
+from config import default_file_name, default_folder_name
 
 
 class BasicFormat(ABC):

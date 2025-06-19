@@ -34,7 +34,7 @@ jobs:
 
     - name: Run performance tests inside Docker
       run: |
-        docker run --rm dataframe-io-performance-testing python3 read_csv.py
+        docker run --rm dataframe-io-performance-testing python3 analyze_dataframe_io.py
 
     # # No tests to run yet
     # - name: Run tests inside Docker

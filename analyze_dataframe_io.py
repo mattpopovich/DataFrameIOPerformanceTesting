@@ -14,7 +14,8 @@ from HdfFormat import HdfFormat
 from OrcFormat import OrcFormat
 from ParquetFormat import ParquetFormat
 
-from common import list_of_compressions, default_folder_name, get_pickle_formats
+from common import get_pickle_formats
+from config import list_of_compressions, default_folder_name
 
 
 # DataFrame keys (_t ~ titles)
