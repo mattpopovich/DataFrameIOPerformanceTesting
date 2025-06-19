@@ -7,12 +7,12 @@ from tqdm import tqdm
 
 from pretty_print_dataframe import pretty_print_dataframe
 
-from BasicFormat import BasicFormat
-from CsvFormat import CsvFormat
-from FeatherFormat import FeatherFormat
-from HdfFormat import HdfFormat
-from OrcFormat import OrcFormat
-from ParquetFormat import ParquetFormat
+from formats.BasicFormat import BasicFormat
+from formats.CsvFormat import CsvFormat
+from formats.FeatherFormat import FeatherFormat
+from formats.HdfFormat import HdfFormat
+from formats.OrcFormat import OrcFormat
+from formats.ParquetFormat import ParquetFormat
 
 from common import get_pickle_formats
 from config import list_of_compressions, default_folder_name

@@ -1,4 +1,4 @@
-from PickleFormat import PickleFormat
+from formats.PickleFormat import PickleFormat
 
 
 def get_pickle_formats(verbose: bool) -> list[PickleFormat]:

@@ -1,4 +1,4 @@
-from BasicFormat import BasicFormat
+from formats.BasicFormat import BasicFormat
 import pandas as pd
 
 
