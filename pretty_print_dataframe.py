@@ -11,7 +11,7 @@ console = Console()
 
 def format_value(val):
     if isinstance(val, float):
-        return f"{val:.6f}".rstrip("0").rstrip(".")
+        return f"{val:.4f}".rstrip("0").rstrip(".")
     return str(val)
 
 
