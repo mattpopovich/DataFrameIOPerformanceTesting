@@ -1,4 +1,8 @@
 # DataFrame I/O Performance Testing
+
+[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/mattpopovich/DataFrameIOPerformanceTesting)
+
+
 This repo was created to test the speed of reading and writing DataFrames to/from disk using different file and compression types.
 
 ## Target Audience
