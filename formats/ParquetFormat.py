@@ -13,8 +13,17 @@ class ParquetFormat(BasicFormat):
         self._engine = engine
 
         # Add compression to file path (if necessary)
-        self._compression_path = "." + self._compression if self._compression else ""
-        self.file_path += self._compression_path
+        self._compression_path = ("." + self._compression) if self._compression else ""
+        self.file_path = (
+            self._folder_name
+            + "/"
+            + self._file_name
+            + "-"
+            + self._engine
+            + "."
+            + self._extension
+            + self._compression_path
+        )
 
     def __str__(self):
         if self._engine == "auto":
