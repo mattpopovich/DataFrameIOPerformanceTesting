@@ -52,7 +52,6 @@ def test_verbose_csv_formats():
     assert all(
         isinstance(f, CsvFormat) for f in formats
     ), "Not all items are of type CsvFormat"
-    assert (
-        len(formats)
-        == 2 * (10 - 0 + 1) + (10 - -1 + 1) + (10 - 1 + 1) + (23 - -7 + 1) + 1
+    assert len(formats) == 3 * (
+        2 * (10 - 0 + 1) + (10 - -1 + 1) + (10 - 1 + 1) + (23 - -7 + 1) + 1
     )

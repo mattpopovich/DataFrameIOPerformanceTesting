@@ -8,13 +8,12 @@ from tqdm import tqdm
 from pretty_print_dataframe import pretty_print_dataframe
 
 from formats.BasicFormat import BasicFormat
-from formats.CsvFormat import CsvFormat
 from formats.FeatherFormat import FeatherFormat
 from formats.HdfFormat import HdfFormat
 from formats.OrcFormat import OrcFormat
 
 from utils import get_pickle_formats, get_parquet_formats, get_csv_formats
-from config import list_of_compressions, default_folder_name
+from config import default_folder_name
 
 
 # DataFrame keys (_t ~ titles)

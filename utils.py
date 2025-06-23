@@ -37,7 +37,20 @@ def get_csv_formats(verbose: bool) -> list[CsvFormat]:
         for compression_level in (list(range(-7, 23)) + [None] if verbose else [None])
     )
     formats.append(CsvFormat(None, None))
-    return formats
+
+    if verbose:
+        # TODO: Only do this if the user specifies a very verbose flag, Ex. -vv
+        # Also test every read engine
+        formats_with_engines: list[CsvFormat] = []
+        for f in formats:
+            for engine in ["c", "python", "pyarrow"]:
+                # pyarrow >> c >> python in tests I've done. Each are about 3x faster than the other
+                formats_with_engines.append(
+                    CsvFormat(f._compression, f._compression_level, engine)
+                )
+        return formats_with_engines
+    else:
+        return formats
 
 
 def get_pickle_formats(verbose: bool) -> list[PickleFormat]:
