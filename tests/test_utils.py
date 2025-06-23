@@ -1,3 +1,5 @@
+import pytest
+
 from utils import get_pickle_formats, get_parquet_formats, get_csv_formats
 from formats.PickleFormat import PickleFormat
 from formats.ParquetFormat import ParquetFormat
@@ -20,7 +22,7 @@ def test_verbose_pickle_formats():
     assert (
         len(formats)
         == 2 * (10 - 0 + 1) + (10 - -1 + 1) + (10 - 1 + 1) + (23 - -7 + 1) + 1
-    )
+    )  # 76
 
 
 def test_parquet_formats():
@@ -40,7 +42,7 @@ def test_verbose_parquet_formats():
 
 
 def test_csv_formats():
-    formats = get_csv_formats(False)
+    formats = get_csv_formats(False, False)
     assert all(
         isinstance(f, CsvFormat) for f in formats
     ), "Not all items are of type CsvFormat"
@@ -48,10 +50,27 @@ def test_csv_formats():
 
 
 def test_verbose_csv_formats():
-    formats = get_csv_formats(True)
+    formats = get_csv_formats(True, False)
+    assert all(
+        isinstance(f, CsvFormat) for f in formats
+    ), "Not all items are of type CsvFormat"
+    assert len(formats) == (
+        2 * (10 - 0 + 1) + (10 - -1 + 1) + (10 - 1 + 1) + (23 - -7 + 1) + 1
+    )  # 76
+
+
+@pytest.mark.parametrize(
+    "verbose",
+    [
+        True,
+        False,
+    ],
+)
+def test_very_verbose_csv_formats(verbose: bool):
+    formats = get_csv_formats(verbose, True)
     assert all(
         isinstance(f, CsvFormat) for f in formats
     ), "Not all items are of type CsvFormat"
     assert len(formats) == 3 * (
         2 * (10 - 0 + 1) + (10 - -1 + 1) + (10 - 1 + 1) + (23 - -7 + 1) + 1
-    )
+    )  # 228

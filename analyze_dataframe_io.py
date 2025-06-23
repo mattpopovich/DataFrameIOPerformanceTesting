@@ -38,6 +38,12 @@ parser.add_argument(
     help="Run with all possible compression levels and show some additional columns",
     action="store_true",
 )
+parser.add_argument(
+    "-vv",
+    "--very-verbose",
+    help="Run with the verbose settings + use all available parsing/library engines",
+    action="store_true",
+)
 args = parser.parse_args()
 
 results: list[dict] = []
@@ -45,7 +51,7 @@ formats: list[BasicFormat] = []
 input_path: str = "data.csv" if not args.file else args.file  # Default if no arg passed
 
 # Create the formats that we want to test
-formats.extend(get_csv_formats(args.verbose))
+formats.extend(get_csv_formats(args.verbose, args.very_verbose))
 formats.extend(get_pickle_formats(args.verbose))
 formats.append(FeatherFormat())
 formats.append(HdfFormat())

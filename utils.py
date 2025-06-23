@@ -4,7 +4,7 @@ from formats.CsvFormat import CsvFormat
 
 
 # TODO: Combine this with get_pickle_formats()
-def get_csv_formats(verbose: bool) -> list[CsvFormat]:
+def get_csv_formats(verbose: bool, very_verbose) -> list[CsvFormat]:
     """
     Returns a list of CsvFormats containing compressions. If desired, also includes
     different compression levels.
@@ -15,6 +15,8 @@ def get_csv_formats(verbose: bool) -> list[CsvFormat]:
     Returns:
         List of `CsvFormat`s
     """
+    verbose = True if very_verbose else verbose
+
     formats: list[CsvFormat] = []
     formats.extend(
         CsvFormat(compression, compression_level)
@@ -38,9 +40,8 @@ def get_csv_formats(verbose: bool) -> list[CsvFormat]:
     )
     formats.append(CsvFormat(None, None))
 
-    if verbose:
-        # TODO: Only do this if the user specifies a very verbose flag, Ex. -vv
-        # Also test every read engine
+    # Test every read engine
+    if very_verbose:
         formats_with_engines: list[CsvFormat] = []
         for f in formats:
             for engine in ["c", "python", "pyarrow"]:

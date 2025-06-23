@@ -24,9 +24,11 @@ The following arguments are supported:
 - `-v` or `--verbose`
   - For every compression type that supports it, test different levels of compression
   - Show some additional columns
-  - For every compression type that supports it, use different compression engines
+  - For every compression type that supports it (except for `csv`), use different compression engines
+- `-vv` or `--very-verbose`
+  - Use all available parsing engines for `csv` files
 
-Example output of `analyze_dataframe_io.py` with a 7.4MB `.csv` file:
+Example output of `analyze_dataframe_io.py` with a 7.4MB `.csv` file (21 tests):
 ```
 ┏━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
 ┃                 ┃ Write  ┃ Read   ┃        ┃         ┃            ┃            ┃          ┃
@@ -60,7 +62,7 @@ Example output of `analyze_dataframe_io.py` with a 7.4MB `.csv` file:
 ```
 
 <details>
-  <summary>Click to show the `--verbose` output for that file:</summary>
+  <summary>Click to show the `--verbose` output for the 7.4MB `.csv` file (179 tests). This adds tests of various compression levels + compression engines for `parquet`. This takes 1.25min on my 7.4MB `.csv` file with a M1 Mac:</summary>
 
 ```
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
@@ -253,3 +255,5 @@ Example output of `analyze_dataframe_io.py` with a 7.4MB `.csv` file:
 ```
 
 </details>
+
+The `-vv` or `--very-verbose` flag will perform 243 tests, adding (in my experiences) low performing `csv` read engine tests. This takes 2.75min on the 7.4MB `.csv` file with a M1 Mac.

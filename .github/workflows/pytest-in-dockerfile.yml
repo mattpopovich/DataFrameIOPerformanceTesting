@@ -37,6 +37,8 @@ jobs:
         docker run --rm dataframe-io-performance-testing python3 analyze_dataframe_io.py
         docker run --rm dataframe-io-performance-testing python3 analyze_dataframe_io.py -v -k -f data.csv
         docker run --rm dataframe-io-performance-testing python3 analyze_dataframe_io.py --verbose --keep --file data.csv
+        docker run --rm dataframe-io-performance-testing python3 analyze_dataframe_io.py -vv -k -f data.csv
+        docker run --rm dataframe-io-performance-testing python3 analyze_dataframe_io.py --very-verbose --keep --file data.csv
 
     - name: Run pytest inside Docker
       run: |
