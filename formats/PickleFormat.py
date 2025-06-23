@@ -22,7 +22,7 @@ class PickleFormat(BasicFormat):
         self._compression_path = "." + self._compression_extension if compression else ""
         self.file_path += self._compression_path
 
-        # Thanks python for making these different
+        # Thanks, pandas, for making these different
         if self._compression == "xz":
             self._compression_key = "preset"
         elif self._compression == "zstd":
@@ -80,7 +80,6 @@ class PickleFormat(BasicFormat):
             and self._compression_level != None
             and self._compression_level != 0
         ):
-
             # Dictionary is required if we want to specify compression level
             compression_dict = {
                 "method": self._compression,

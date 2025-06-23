@@ -13,7 +13,7 @@ from formats.FeatherFormat import FeatherFormat
 from formats.HdfFormat import HdfFormat
 from formats.OrcFormat import OrcFormat
 
-from utils import get_pickle_formats, get_parquet_formats
+from utils import get_pickle_formats, get_parquet_formats, get_csv_formats
 from config import list_of_compressions, default_folder_name
 
 
@@ -46,7 +46,7 @@ formats: list[BasicFormat] = []
 input_path: str = "data.csv" if not args.file else args.file  # Default if no arg passed
 
 # Create the formats that we want to test
-formats.extend(CsvFormat(compression) for compression in list_of_compressions)
+formats.extend(get_csv_formats(args.verbose))
 formats.extend(get_pickle_formats(args.verbose))
 formats.append(FeatherFormat())
 formats.append(HdfFormat())
