@@ -35,4 +35,4 @@ def test_verbose_parquet_formats():
     assert all(
         isinstance(f, ParquetFormat) for f in formats
     ), "Not all items are of type ParquetFormat"
-    assert len(formats) == 6 * 2, f"Returned list contains {len(formats)} items"
+    assert len(formats) == 6 * 2 * 2, f"Returned list contains {len(formats)} items"

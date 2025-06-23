@@ -51,8 +51,9 @@ def get_parquet_formats(verbose: bool) -> list[ParquetFormat]:
     """
     formats: list[ParquetFormat] = []
     formats.extend(
-        ParquetFormat(compression, engine)
+        ParquetFormat(compression, write_engine, read_engine)
         for compression in [None, "snappy", "gzip", "brotli", "lz4", "zstd"]
-        for engine in (["pyarrow", "fastparquet"] if verbose else ["auto"])
+        for write_engine in (["pyarrow", "fastparquet"] if verbose else ["auto"])
+        for read_engine in (["pyarrow", "fastparquet"] if verbose else ["auto"])
     )
     return formats
