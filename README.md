@@ -14,7 +14,7 @@ This repo will load data into a Pandas `DataFrame`. It will then write and read 
 You may need to modify the code such that your input file is read in correctly. My sample file, `data.csv` is time series data with the first column specifying the date and time.
 
 ## How to Use
-Run the following file to perform analysis: `python3 analyze_dataframe_io.py`. A Dockerfile is provided to manage the repo's requirements.
+Run the following file to perform analysis: `python3 analyze_dataframe_io.py`. A `Dockerfile` is provided to manage the repo's requirements.
 
 The following arguments are supported:
 - `-f` or `--file`
@@ -25,8 +25,10 @@ The following arguments are supported:
   - For every compression type that supports it, test different levels of compression
   - Show some additional columns
   - For every compression type that supports it (except for `csv`), use different compression engines
+  - 179 tests: 1.25min on the 7.4MB `.csv` file with a M1 Mac
 - `-vv` or `--very-verbose`
   - Use all available parsing engines for `csv` files
+  - 243 tests: 2.75min on the 7.4MB `.csv` file with a M1 Mac
 
 Example output of `analyze_dataframe_io.py` with a 7.4MB `.csv` file (21 tests):
 ```
@@ -62,7 +64,7 @@ Example output of `analyze_dataframe_io.py` with a 7.4MB `.csv` file (21 tests):
 ```
 
 <details>
-  <summary>Click to show the `--verbose` output for the 7.4MB `.csv` file (179 tests). This adds tests of various compression levels + compression engines for `parquet`. This takes 1.25min on my 7.4MB `.csv` file with a M1 Mac:</summary>
+  <summary>Click to show the <code>-v</code> or <code>--verbose</code> output for the 7.4MB <code>.csv</code> file</summary>
 
 ```
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
@@ -256,4 +258,14 @@ Example output of `analyze_dataframe_io.py` with a 7.4MB `.csv` file (21 tests):
 
 </details>
 
-The `-vv` or `--very-verbose` flag will perform 243 tests, adding (in my experiences) low performing `csv` read engine tests. This takes 2.75min on the 7.4MB `.csv` file with a M1 Mac.
+### Table Output Explanation
+- Format = information about how this row was created
+  - `C=` = The compression level used
+  -  `Wpy→`, `WfastP` = the write engine used for `.parquet` files (`pyarrow` or `fastparquet`)
+  - `Rpy→`, `RfastP` = the read engine used for `.parquet` files (`pyarrow` or `fastparquet`)
+  - `Rc`, `Rpy`, `Rpy→` = the read parser engine used for `.csv` files (`C`, `python`, or `pyarrow`)
+- Total I/O Normalized = How many times slower this format was vs the fastest format at writing to file + reading from file
+- Output File Size Normalized = How many times larger this format's file was vs the smallest format's file
+- Score (lower is better) = I'm defining "score" as `Total I/O Normalized` + `Output File Size Normalized`.
+  - I am attempting to find the format that has the lowest file size and the fastest read and write times
+  - You should adjust the score based on your personal use case
