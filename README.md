@@ -28,9 +28,9 @@ The following arguments are supported:
   - 179 tests: 1.25min on the 7.4MB `.csv` file with a M1 Mac
 - `-vv` or `--very-verbose`
   - Use all available parsing engines for `csv` files
-  - 243 tests: 2.75min on the 7.4MB `.csv` file with a M1 Mac
+  - 331 tests: 3min on the 7.4MB `.csv` file with a M1 Mac
 
-Example output of `analyze_dataframe_io.py` with a 7.4MB `.csv` file (21 tests):
+Example output of `analyze_dataframe_io.py` with a 7.4MB `.csv` file (21 tests: 5s on the 7.4MB `.csv` file with a M1 Mac):
 ```
 ┏━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
 ┃                 ┃ Write  ┃ Read   ┃        ┃         ┃            ┃            ┃          ┃

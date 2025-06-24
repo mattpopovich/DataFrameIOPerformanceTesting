@@ -52,11 +52,11 @@ input_path: str = "data.csv" if not args.file else args.file  # Default if no ar
 
 # Create the formats that we want to test
 formats.extend(get_csv_formats(args.verbose, args.very_verbose))
-formats.extend(get_pickle_formats(args.verbose))
+formats.extend(get_pickle_formats(args.verbose or args.very_verbose))
 formats.append(FeatherFormat())
 formats.append(HdfFormat())
 formats.append(OrcFormat())
-formats.extend(get_parquet_formats(args.verbose))
+formats.extend(get_parquet_formats(args.verbose or args.very_verbose))
 
 os.makedirs(default_folder_name, exist_ok=True)
 df = pd.read_csv(input_path)
@@ -124,7 +124,7 @@ results_df = results_df.sort_values(score_t)  # Lower score is better
 # results_df = results_df.sort_values(output_file_size_orig_t)  # Identify bad compressions
 
 # Remove unnecessary columns
-if not args.verbose:
+if not (args.verbose or args.very_verbose):
     results_df.drop(
         columns=[dataframe_memory_difference_t, equivalent_dataframes_t], inplace=True
     )
