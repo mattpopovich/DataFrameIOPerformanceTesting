@@ -23,6 +23,8 @@ output_file_size_orig_t = "Output File Size (% Orig.)"
 output_file_size_norm_t = "Output File Size Normalized"
 total_io_t = "Total I/O (s)"
 dataframe_memory_difference_t = "DataFrame Memory Difference (B)"
+write_time_to_file_t = "Write time to file (s)"
+read_time_to_file_t = "Read time from file (s)"
 equivalent_dataframes_t = "Equivalent DataFrames"
 
 parser = argparse.ArgumentParser()
@@ -98,8 +100,8 @@ for format in tqdm(formats):
         {
             "Format": format,
             dataframe_memory_difference_t: dataframe_memory_difference_B,
-            "Write time to file (s)": write_time_s,
-            "Read time from file (s)": read_time_s,
+            write_time_to_file_t: write_time_s,
+            read_time_to_file_t: read_time_s,
             total_io_t: total_io_s,
             output_file_size_orig_t: output_file_size_B / input_file_size_B * 100,
             equivalent_dataframes_t: df.equals(df2),
