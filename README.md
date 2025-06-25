@@ -264,8 +264,16 @@ Example output of `analyze_dataframe_io.py` with a 7.4MB `.csv` file (21 tests: 
   -  `Wpy→`, `WfastP` = the write engine used for `.parquet` files (`pyarrow` or `fastparquet`)
   - `Rpy→`, `RfastP` = the read engine used for `.parquet` files (`pyarrow` or `fastparquet`)
   - `Rc`, `Rpy`, `Rpy→` = the read parser engine used for `.csv` files (`C`, `python`, or `pyarrow`)
+  - If nothing is specified, then the default settings were used.
 - Total I/O Normalized = How many times slower this format was vs the fastest format at writing to file + reading from file
 - Output File Size Normalized = How many times larger this format's file was vs the smallest format's file
 - Score (lower is better) = I'm defining "score" as `Total I/O Normalized` + `Output File Size Normalized`.
-  - I am attempting to find the format that has the lowest file size and the fastest read and write times
+  - I am attempting to find the format that has the lowest file size **and** the fastest read and write times.
   - You should adjust the score based on your personal use case
+    - Ex. if all you care about is minimizing file size, use `csv.xz`. If you desire fastest read + write times, use `.pkl.gzip`.
+
+Verbose flags:
+- DataFrame Memory Difference (B) = In bytes, the `DataFrame` size when read from file - `DataFrame` size before it was written to file
+  - Should be 0, investigation recommended if it is not
+- Equivalent DataFrames = Sanity check to ensure the `DataFrame`s are equal via `DataFrame.eqals()`
+  - Should be `True`. Investigation needed if it is not
