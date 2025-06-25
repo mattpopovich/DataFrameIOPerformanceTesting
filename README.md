@@ -272,7 +272,7 @@ Example output of `analyze_dataframe_io.py` with a 7.4MB `.csv` file (21 tests: 
   - You should adjust the score based on your personal use case
     - Ex. if all you care about is minimizing file size, use `csv.xz`. If you desire fastest read + write times, use `.pkl.gzip`.
 
-Verbose flags:
+#### Verbose flags:
 - DataFrame Memory Difference (B) = In bytes, the `DataFrame` size when read from file - `DataFrame` size before it was written to file
   - Should be 0, investigation recommended if it is not
 - Equivalent DataFrames = Sanity check to ensure the `DataFrame`s are equal via `DataFrame.eqals()`

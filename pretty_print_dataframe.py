@@ -25,7 +25,7 @@ col_widths = {}
 
 def pretty_print_dataframe(df):
     # Format values ahead of time
-    formatted_df = df.applymap(format_value)
+    formatted_df = df.map(format_value)
 
     for col in df.columns:
         header_width = longest_word_length(col)
