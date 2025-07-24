@@ -20,7 +20,7 @@ class BasicFormat(ABC):
 
         self.file_path = self._folder_name + "/" + self._file_name + "." + self._extension
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self._extension
 
     @abstractmethod

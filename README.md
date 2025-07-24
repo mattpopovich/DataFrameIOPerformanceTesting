@@ -25,10 +25,10 @@ The following arguments are supported:
   - For every compression type that supports it, test different levels of compression
   - Show some additional columns
   - For every compression type that supports it (except for `csv`), use different compression engines
-  - 179 tests: 1.25min on the 7.4MB `.csv` file with a M1 Mac
+  - 179 tests: 1.25min on a 7.4MB `.csv` file with a M1 Mac
 - `-vv` or `--very-verbose`
   - Use all available parsing engines for `csv` files
-  - 331 tests: 3min on the 7.4MB `.csv` file with a M1 Mac
+  - 331 tests: 3min on a 7.4MB `.csv` file with a M1 Mac
 
 Example output of `analyze_dataframe_io.py` with a 7.4MB `.csv` file (21 tests: 5s on the 7.4MB `.csv` file with a M1 Mac):
 ```
