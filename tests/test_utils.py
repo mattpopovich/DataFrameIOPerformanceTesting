@@ -16,7 +16,7 @@ from formats.ParquetFormat import ParquetFormat
 from formats.CsvFormat import CsvFormat
 from formats.BasicFormat import BasicFormat
 
-NUM_COMPRESSION_TESTS = (
+NUM_COMPRESSIONS_WITH_LEVELS = (
     2 * (10 - 0 + 1) + (10 - -1 + 1) + (10 - 1 + 1) + (23 - -7 + 1) + 1
 )  # 76
 NUM_COMPRESSIONS = len(list_of_compressions)
@@ -30,12 +30,12 @@ def test_pickle_formats():
     assert len(formats) == NUM_COMPRESSIONS
 
 
-def test_verbose_pickle_formats():
+def test_pickle_formats_with_compression_levels():
     formats = get_pickle_formats(True)
     assert all(
         isinstance(f, PickleFormat) for f in formats
     ), "Not all items are of type PickleFormat"
-    assert len(formats) == NUM_COMPRESSION_TESTS
+    assert len(formats) == NUM_COMPRESSIONS_WITH_LEVELS
 
 
 def test_parquet_formats():
@@ -48,13 +48,13 @@ def test_parquet_formats():
     ), f"Returned list contains {len(formats)} items"
 
 
-def test_verbose_parquet_formats():
+def test_parquet_formats_with_engines():
     formats = get_parquet_formats(True)
     assert all(
         isinstance(f, ParquetFormat) for f in formats
     ), "Not all items are of type ParquetFormat"
     assert (
-        len(formats) == NUM_COMPRESSIONS * 2 * 2
+        len(formats) == NUM_COMPRESSIONS * 2 * 2  # Two read engines, two write engines
     ), f"Returned list contains {len(formats)} items"
 
 
@@ -66,12 +66,12 @@ def test_csv_formats():
     assert len(formats) == NUM_COMPRESSIONS
 
 
-def test_compression_csv_formats():
+def test_csv_formats_with_compression_levels():
     formats = get_csv_formats(True, False)
     assert all(
         isinstance(f, CsvFormat) for f in formats
     ), "Not all items are of type CsvFormat"
-    assert len(formats) == NUM_COMPRESSION_TESTS
+    assert len(formats) == NUM_COMPRESSIONS_WITH_LEVELS
 
 
 def test_engine_csv_formats():
@@ -87,7 +87,7 @@ def test_compression_and_engine_csv_formats():
     assert all(
         isinstance(f, CsvFormat) for f in formats
     ), "Not all items are of type CsvFormat"
-    assert len(formats) == 3 * NUM_COMPRESSION_TESTS  # 228
+    assert len(formats) == 3 * NUM_COMPRESSIONS_WITH_LEVELS  # 228
 
 
 @pytest.mark.parametrize("formatType", [CsvFormat, PickleFormat])
@@ -100,9 +100,9 @@ def test_get_compression_formats(formatType: BasicFormat):
 
 
 @pytest.mark.parametrize("formatType", [CsvFormat, PickleFormat])
-def test_get_compression_formats_verbose(formatType: BasicFormat):
+def test_get_compression_formats_with_compression_levels(formatType: BasicFormat):
     formats = get_compression_formats(formatType, True)
     assert all(
         isinstance(f, formatType) for f in formats
     ), "Not all items are of the requested type"
-    assert len(formats) == NUM_COMPRESSION_TESTS
+    assert len(formats) == NUM_COMPRESSIONS_WITH_LEVELS
