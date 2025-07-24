@@ -16,7 +16,7 @@ from utils import get_pickle_formats, get_parquet_formats, get_csv_formats
 from config import default_folder_name
 
 
-# DataFrame keys (_t ~ titles)
+# DataFrame keys (_t ≈ titles)
 score_t = "Score (lower is better)"
 total_io_normalized_t = "Total I/O Normalized"
 output_file_size_orig_t = "Output File Size (% Orig.)"
@@ -53,11 +53,13 @@ formats: list[BasicFormat] = []
 input_path: str = "data.csv" if not args.file else args.file  # Default if no arg passed
 
 # Create the formats that we want to test
-formats.extend(get_csv_formats(args.verbose, args.very_verbose))
-formats.extend(get_pickle_formats(args.verbose or args.very_verbose))
+get_compression_levels = args.verbose or args.very_verbose
+formats.extend(get_csv_formats(get_compression_levels, args.very_verbose))
+formats.extend(get_pickle_formats(get_compression_levels))
 formats.append(FeatherFormat())
 formats.append(HdfFormat())
 formats.append(OrcFormat())
+# Parquet is small enough that we can get engines when running with verbose
 formats.extend(get_parquet_formats(args.verbose or args.very_verbose))
 
 os.makedirs(default_folder_name, exist_ok=True)

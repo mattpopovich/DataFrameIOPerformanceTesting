@@ -53,7 +53,6 @@ class AdvancedFormat(BasicFormat):
         bz2 = compresslevel: 1 - 9
         zstd = level: -7 - 22
         xz = preset: 0 - 9
-        tar = just archives, no compression
         """
         raise NotImplementedError
 

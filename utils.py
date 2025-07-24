@@ -68,9 +68,7 @@ def get_csv_formats(compression_levels: bool, read_engines: bool) -> list[CsvFor
     Returns:
         List of `CsvFormat`s
     """
-    formats: list[CsvFormat] = get_compression_formats(
-        CsvFormat, compression_levels or read_engines
-    )
+    formats: list[CsvFormat] = get_compression_formats(CsvFormat, compression_levels)
 
     # Test every read engine
     if read_engines:
