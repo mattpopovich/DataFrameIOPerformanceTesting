@@ -16,7 +16,8 @@ class CsvFormat(AdvancedFormat):
         super().__init__(
             extension="csv", compression=compression, compression_level=compression_level
         )
-        self._read_engine = read_engine  # TODO: What is the default read_engine? Not listed in documentation. Seems to be 'c' in my tests
+        # The default read_engine isn't listed documentation. Seems to be 'c' in my tests
+        self._read_engine = read_engine
 
     def __str__(self) -> str:
         if self._read_engine == "c":

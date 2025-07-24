@@ -8,14 +8,16 @@ from formats.CsvFormat import CsvFormat
 from formats.BasicFormat import BasicFormat
 
 
-def get_compression_formats(formatType: BasicFormat, verbose: bool) -> list[BasicFormat]:
+def get_compression_formats(
+    formatType: BasicFormat, compression_levels: bool
+) -> list[BasicFormat]:
     """
     Given a formatType, will return a list of formatTypes that contains all compressions
     (and compression levels, if desired).
 
     Args:
         formatType: The BasicFormat that the returned list will contain
-        verbose: True if you want different compression levels, False otherwise
+        compression_levels: True if you want different compression levels, False otherwise
 
     Returns:
         List of `formatType`s
@@ -24,44 +26,54 @@ def get_compression_formats(formatType: BasicFormat, verbose: bool) -> list[Basi
     formats.extend(
         formatType(compression, compression_level)
         for compression in ["zip", "xz"]
-        for compression_level in (list(range(0, 10)) + [None] if verbose else [None])
+        for compression_level in (
+            list(range(0, 10)) + [None] if compression_levels else [None]
+        )
     )
     formats.extend(
         formatType(compression, compression_level)
         for compression in ["gzip"]
-        for compression_level in (list(range(-1, 10)) + [None] if verbose else [None])
+        for compression_level in (
+            list(range(-1, 10)) + [None] if compression_levels else [None]
+        )
     )  # Not sure why -1 works but we'll include it
     formats.extend(
         formatType(compression, compression_level)
         for compression in ["bz2"]
-        for compression_level in (list(range(1, 10)) + [None] if verbose else [None])
+        for compression_level in (
+            list(range(1, 10)) + [None] if compression_levels else [None]
+        )
     )
     formats.extend(
         formatType(compression, compression_level)
         for compression in ["zstd"]
-        for compression_level in (list(range(-7, 23)) + [None] if verbose else [None])
+        for compression_level in (
+            list(range(-7, 23)) + [None] if compression_levels else [None]
+        )
     )
     formats.append(formatType(None, None))
 
     return formats
 
 
-def get_csv_formats(verbose: bool, very_verbose: bool) -> list[CsvFormat]:
+def get_csv_formats(compression_levels: bool, read_engines: bool) -> list[CsvFormat]:
     """
     Returns a list of CsvFormats containing compressions. If desired, also includes
     different compression levels.
 
     Args:
-        verbose: True if you want different compression levels, False otherwise
-        very_verbose: True if you want to test every read engine, False otherwise
+        compression_levels: True if you want different compression levels, False otherwise
+        read_engines: True if you want to test every read engine, False otherwise
 
     Returns:
         List of `CsvFormat`s
     """
-    formats: list[CsvFormat] = get_compression_formats(CsvFormat, verbose or very_verbose)
+    formats: list[CsvFormat] = get_compression_formats(
+        CsvFormat, compression_levels or read_engines
+    )
 
     # Test every read engine
-    if very_verbose:
+    if read_engines:
         formats_with_engines: list[CsvFormat] = []
         for f in formats:
             for engine in ["c", "python", "pyarrow"]:
@@ -74,28 +86,30 @@ def get_csv_formats(verbose: bool, very_verbose: bool) -> list[CsvFormat]:
         return formats
 
 
-def get_pickle_formats(verbose: bool) -> list[PickleFormat]:
+def get_pickle_formats(compression_levels: bool) -> list[PickleFormat]:
     """
     Returns a list of PickleFormats containing compressions. If desired, also includes
     different compression levels.
 
     Args:
-        verbose: True if you want different compression levels, False otherwise
+        compression_levels: True if you want different compression levels, False otherwise
 
     Returns:
         List of `PickleFormat`s
     """
-    formats: list[PickleFormat] = get_compression_formats(PickleFormat, verbose)
+    formats: list[PickleFormat] = get_compression_formats(
+        PickleFormat, compression_levels
+    )
     return formats
 
 
-def get_parquet_formats(verbose: bool) -> list[ParquetFormat]:
+def get_parquet_formats(include_engines: bool) -> list[ParquetFormat]:
     """
     Returns a list of ParquetFormats containing compressions. If desired, also includes
     different parquet engines.
 
     Args:
-        verbose: True if you want different parquet engines, False otherwise
+        include_engines: True if you want different parquet engines, False otherwise
 
     Returns:
         List of `ParquetFormat`s
@@ -104,7 +118,7 @@ def get_parquet_formats(verbose: bool) -> list[ParquetFormat]:
     formats.extend(
         ParquetFormat(compression, write_engine, read_engine)
         for compression in [None, "snappy", "gzip", "brotli", "lz4", "zstd"]
-        for write_engine in (["pyarrow", "fastparquet"] if verbose else ["auto"])
-        for read_engine in (["pyarrow", "fastparquet"] if verbose else ["auto"])
+        for write_engine in (["pyarrow", "fastparquet"] if include_engines else ["auto"])
+        for read_engine in (["pyarrow", "fastparquet"] if include_engines else ["auto"])
     )
     return formats
