@@ -4,7 +4,7 @@ import pandas as pd
 
 class HdfFormat(BasicFormat):
     """
-    Implements reading and writing of Pandas DataFrames in the HDF format
+    Implements reading and writing of Pandas DataFrames in the HDF (.hdf5, .h5) format
     """
 
     def __init__(self):

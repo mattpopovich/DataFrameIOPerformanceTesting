@@ -5,6 +5,7 @@ Test utils.py
 import pytest
 
 from utils import (
+    get_formats,
     get_pickle_formats,
     get_parquet_formats,
     get_csv_formats,
@@ -79,7 +80,7 @@ def test_engine_csv_formats():
     assert all(
         isinstance(f, CsvFormat) for f in formats
     ), "Not all items are of type CsvFormat"
-    assert len(formats) == 3 * NUM_COMPRESSIONS
+    assert len(formats) == 3 * NUM_COMPRESSIONS  # 3 engines
 
 
 def test_compression_and_engine_csv_formats():
@@ -87,7 +88,7 @@ def test_compression_and_engine_csv_formats():
     assert all(
         isinstance(f, CsvFormat) for f in formats
     ), "Not all items are of type CsvFormat"
-    assert len(formats) == 3 * NUM_COMPRESSIONS_WITH_LEVELS  # 228
+    assert len(formats) == 3 * NUM_COMPRESSIONS_WITH_LEVELS  # 3 engines
 
 
 @pytest.mark.parametrize("formatType", [CsvFormat, PickleFormat])
@@ -106,3 +107,45 @@ def test_get_compression_formats_with_compression_levels(formatType: BasicFormat
         isinstance(f, formatType) for f in formats
     ), "Not all items are of the requested type"
     assert len(formats) == NUM_COMPRESSIONS_WITH_LEVELS
+
+
+def test_get_formats():
+    formats = get_formats(False, False)
+    assert all(
+        isinstance(f, BasicFormat) for f in formats
+    ), "Not all items are of type BasicFormat"
+    assert (
+        len(formats) == 3 * NUM_COMPRESSIONS + 3
+    )  # csv, pickle, parquet have compressions. feather, hdf, orc do not
+
+
+def test_get_formats_verbose():
+    formats = get_formats(True, False)
+    assert all(
+        isinstance(f, BasicFormat) for f in formats
+    ), "Not all items are of type BasicFormat"
+    assert (
+        len(formats) == 2 * NUM_COMPRESSIONS_WITH_LEVELS + (NUM_COMPRESSIONS * 2 * 2) + 3
+    )  # csv, pickle have compression levels. parquet has compression engines
+
+
+def test_get_formats_very_verbose():
+    formats = get_formats(False, True)
+    assert all(
+        isinstance(f, BasicFormat) for f in formats
+    ), "Not all items are of type BasicFormat"
+    assert (
+        len(formats)
+        == (1 + 3) * NUM_COMPRESSIONS_WITH_LEVELS + (NUM_COMPRESSIONS * 2 * 2) + 3
+    )  # Adding 3 CSV compression engines
+
+
+def test_get_formats_verbose_and_very_verbose():
+    formats = get_formats(True, True)
+    assert all(
+        isinstance(f, BasicFormat) for f in formats
+    ), "Not all items are of type BasicFormat"
+    assert (
+        len(formats)
+        == (1 + 3) * NUM_COMPRESSIONS_WITH_LEVELS + (NUM_COMPRESSIONS * 2 * 2) + 3
+    )  # Same as test_get_formats_very_verbose()

@@ -8,11 +8,8 @@ from tqdm import tqdm
 from pretty_print_dataframe import pretty_print_dataframe
 
 from formats.BasicFormat import BasicFormat
-from formats.FeatherFormat import FeatherFormat
-from formats.HdfFormat import HdfFormat
-from formats.OrcFormat import OrcFormat
 
-from utils import get_pickle_formats, get_parquet_formats, get_csv_formats
+from utils import get_formats
 from config import default_folder_name
 
 
@@ -49,18 +46,10 @@ parser.add_argument(
 args = parser.parse_args()
 
 results: list[dict] = []
-formats: list[BasicFormat] = []
 input_path: str = "data.csv" if not args.file else args.file  # Default if no arg passed
 
 # Create the formats that we want to test
-get_compression_levels = args.verbose or args.very_verbose
-formats.extend(get_csv_formats(get_compression_levels, args.very_verbose))
-formats.extend(get_pickle_formats(get_compression_levels))
-formats.append(FeatherFormat())
-formats.append(HdfFormat())
-formats.append(OrcFormat())
-# Parquet is small enough that we can get engines when running with verbose
-formats.extend(get_parquet_formats(args.verbose or args.very_verbose))
+formats: list[BasicFormat] = get_formats(args.verbose, args.very_verbose)
 
 os.makedirs(default_folder_name, exist_ok=True)
 df = pd.read_csv(input_path)

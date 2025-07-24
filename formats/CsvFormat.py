@@ -4,7 +4,7 @@ import pandas as pd
 
 class CsvFormat(AdvancedFormat):
     """
-    Implements reading and writing of Pandas DataFrames in the CSV format
+    Implements reading and writing of Pandas DataFrames in the CSV (.csv) format
     """
 
     def __init__(

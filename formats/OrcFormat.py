@@ -4,7 +4,7 @@ import pandas as pd
 
 class OrcFormat(BasicFormat):
     """
-    Implements reading and writing of Pandas DataFrames in the Orc format
+    Implements reading and writing of Pandas DataFrames in the Orc (.orc) format
     """
 
     def __init__(self):

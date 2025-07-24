@@ -6,6 +6,28 @@ from formats.PickleFormat import PickleFormat
 from formats.ParquetFormat import ParquetFormat
 from formats.CsvFormat import CsvFormat
 from formats.BasicFormat import BasicFormat
+from formats.FeatherFormat import FeatherFormat
+from formats.HdfFormat import HdfFormat
+from formats.OrcFormat import OrcFormat
+
+
+def get_formats(verbose: bool, very_verbose: bool) -> list[BasicFormat]:
+    """
+    Will return a list of BasicFormat. The number of formats in the list depends on
+    verbosity
+    """
+    formats: list[BasicFormat] = []
+    get_compression_levels = verbose or very_verbose
+
+    formats.extend(get_csv_formats(get_compression_levels, very_verbose))
+    formats.extend(get_pickle_formats(get_compression_levels))
+    formats.append(FeatherFormat())
+    formats.append(HdfFormat())
+    formats.append(OrcFormat())
+    # Parquet is small enough that we can get engines when running with verbose
+    formats.extend(get_parquet_formats(verbose or very_verbose))
+
+    return formats
 
 
 def get_compression_formats(
@@ -14,6 +36,14 @@ def get_compression_formats(
     """
     Given a formatType, will return a list of formatTypes that contains all compressions
     (and compression levels, if desired).
+
+        compression = compression key : valid compression levels
+        -----------------------------
+        zip = compresslevel: 0 - 9
+        gzip = compresslevel: -1 - 9
+        bz2 = compresslevel: 1 - 9
+        zstd = level: -7 - 22
+        xz = preset: 0 - 9
 
     Args:
         formatType: The BasicFormat that the returned list will contain

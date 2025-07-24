@@ -47,19 +47,13 @@ class AdvancedFormat(BasicFormat):
         raise NotImplementedError
 
     def write(self, df: pd.DataFrame) -> None:
-        """
-        zip = compresslevel: 0 - 9 : https://docs.python.org/3/library/gzip.html
-        gzip = compresslevel: -1 - 9
-        bz2 = compresslevel: 1 - 9
-        zstd = level: -7 - 22
-        xz = preset: 0 - 9
-        """
         raise NotImplementedError
 
     def read(self):
         """
-        Sometimes you have to specify the compression level when reading.
-            Source: trial and error
+        Sometimes you have to specify the compression level, sometimes you are not allowed
+        to specify the compression level, and sometimes it doesn't matter when reading.
+        Source: trial and error
 
         zip = specify or no specify
         gzip = specify

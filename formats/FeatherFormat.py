@@ -4,7 +4,7 @@ import pandas as pd
 
 class FeatherFormat(BasicFormat):
     """
-    Implements reading and writing of Pandas DataFrames in the Feather format
+    Implements reading and writing of Pandas DataFrames in the Feather (.feather) format
     """
 
     def __init__(self):

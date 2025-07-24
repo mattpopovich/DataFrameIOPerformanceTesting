@@ -4,7 +4,7 @@ import pandas as pd
 
 class ParquetFormat(BasicFormat):
     """
-    Implements reading and writing of Pandas DataFrames in the Parquet format
+    Implements reading and writing of Pandas DataFrames in the Parquet (.parquet) format
     """
 
     def __init__(

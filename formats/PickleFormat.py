@@ -4,7 +4,8 @@ import pandas as pd
 
 class PickleFormat(AdvancedFormat):
     """
-    Implements reading and writing of Pandas DataFrames in the Pickle format
+    Implements reading and writing of Pandas DataFrames in the Pickle (.pickle, .pkl)
+    format
 
     compression_level can only be supplied for compressions: [zip, gzip, bz2, zstd, xz]
     """
